@@ -329,14 +329,19 @@ function updateCameraFollow() {
         const cameraPos = charPos.clone().add(cameraBackOffset).add(cameraUpOffset);
         camera.position.copy(cameraPos);
 
-        // 카메라는 -Z 방향을 바라보고, 캐릭터 얼굴은 +Z 방향
-        // 따라서 캐릭터 quaternion 복사 후 180도 회전 필요
-        camera.quaternion.copy(character.group.quaternion);
+        // 캐릭터의 회전에서 Yaw만 가져오기
+        const euler = new THREE.Euler().setFromQuaternion(character.group.quaternion, 'YXZ');
 
-        // 로컬 Y축 기준 180도 회전 (카메라가 캐릭터와 같은 방향을 바라보도록)
-        const flipRotation = new THREE.Quaternion();
-        flipRotation.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI);
-        camera.quaternion.multiply(flipRotation);
+        // pitch = 0, roll = 0 으로 고정하고 yaw만 사용
+        const yawOnly = new THREE.Euler(0, euler.y, 0, 'YXZ');
+        const yawQuat = new THREE.Quaternion().setFromEuler(yawOnly);
+
+        // 카메라 회전 = yaw만 적용
+        camera.quaternion.copy(yawQuat);
+
+        // 캐릭터가 바라보는 방향을 보도록 180도 돌리기
+        const flip = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI);
+        camera.quaternion.multiply(flip);
     }
 }
 
