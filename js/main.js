@@ -318,7 +318,7 @@ function updateCameraFollow() {
         camera.lookAt(charPos);
         camera.up.copy(new THREE.Vector3(0, 1, 0));
     } else if (cameraMode === 'front') {
-        // 정면뷰: 캐릭터 뒤에서 수평으로 앞쪽을 바라보기 (3인칭 시점)
+        // 정면뷰: 캐릭터 뒤에서 캐릭터가 바라보는 방향으로 바라보기
         const forward = new THREE.Vector3(0, 0, 1).applyQuaternion(character.group.quaternion);
 
         // 캐릭터 뒤쪽으로 카메라 이동
@@ -329,10 +329,8 @@ function updateCameraFollow() {
         const cameraPos = charPos.clone().add(cameraBackOffset).add(cameraUpOffset);
         camera.position.copy(cameraPos);
 
-        // 카메라와 같은 높이에서 앞쪽을 바라보기 (수평 시야)
-        const lookAtPos = cameraPos.clone().add(forward.clone().multiplyScalar(2));
-        camera.lookAt(lookAtPos);
-        camera.up.copy(charUp);
+        // 카메라가 캐릭터와 같은 방향을 바라보도록 quaternion 직접 설정
+        camera.quaternion.copy(character.group.quaternion);
     }
 }
 
