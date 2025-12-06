@@ -18,8 +18,8 @@ export class Character {
         this.facingAngle = 0; // 캐릭터가 바라보는 방향 (라디안)
 
         this.earthRadius = 1;
-        this.characterHeight = 0.08;
-        this.baseHeight = 0.08;
+        this.characterHeight = 0.01;
+        this.baseHeight = 0.01;
 
         // 점프 관련
         this.isJumping = false;
